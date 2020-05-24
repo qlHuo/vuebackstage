@@ -18,13 +18,23 @@ import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
 
+// 导入NProgress包对应的js和css文件
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 // 配置接口的基准路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
-// axios 请求拦截器
+// axios 请求拦截器, 在请求拦截其中展示进度条 NProgress.start()
 axios.interceptors.request.use(config => {
   // console.log(config)
+  NProgress.start()
   // 为请求头对象，添加token验证的Authorization字段，预处理config
   config.headers.Authorization = window.sessionStorage.getItem('token')
+  return config
+})
+// 在响应拦截器中隐藏进度条
+axios.interceptors.response.use(config => {
+  NProgress.done()
   return config
 })
 
